@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import db
 
 def scrapeBottle(url):
     headers = {"User-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:129.0) Gecko/20100101 Firefox/129.0"}
@@ -41,6 +42,10 @@ def scrapeBottle(url):
     else:
         return {"title": title, "price": price_int, "milliliters": None}
     
+def insertAndLogPrice(url):
+    data = scrapeBottle(url)
+    if data["milliliters"] == None:
+        raise ValueError("data missing bottle size, couldn't add to database...")
     
-    
-    
+    db.insertNewDrink(data["title"], url)
+    db.insertNewPrice(data["title"], data["price"], data["milliliters"], data["millilitersPerDollar"], data["costPerShot"])

@@ -30,8 +30,8 @@ def insertNewDrink(name:str, url:str):
 
 def insertNewPrice(name:str, price, ml, mlDollar, costPerShot):
     cursor = connection.cursor()
-    data = (name, price, ml, mlDollar, costPerShot)
-    cursor.execute("INSERT INTO drinks VALUES (?, ?)", data)
+    data = (name, price, ml, mlDollar, costPerShot, round(time.time()))
+    cursor.execute("INSERT INTO prices VALUES (?, ?, ?, ?, ?, ?)", data)
     connection.commit()
     return True
 
