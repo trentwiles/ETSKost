@@ -15,6 +15,7 @@ def create():
 create()
 
 def insertNewDrink(name:str, url:str):
+    connection = sqlite3.connect("db.db")
     cursor = connection.cursor()
     
     # check if the drink doesn't exist first
@@ -29,6 +30,7 @@ def insertNewDrink(name:str, url:str):
     return True
 
 def insertNewPrice(name:str, price, ml, mlDollar, costPerShot):
+    connection = sqlite3.connect("db.db")
     cursor = connection.cursor()
     data = (name, price, ml, mlDollar, costPerShot, round(time.time()))
     cursor.execute("INSERT INTO prices VALUES (?, ?, ?, ?, ?, ?)", data)
@@ -36,20 +38,24 @@ def insertNewPrice(name:str, price, ml, mlDollar, costPerShot):
     return True
 
 def selectAll():
+    connection = sqlite3.connect("db.db")
     cursor = connection.cursor()
     return cursor.execute("SELECT * FROM drinks").fetchall()
 
 def selectDrink(name):
+    connection = sqlite3.connect("db.db")
     cursor = connection.cursor()
     data = (name,)
     return cursor.execute("SELECT * FROM drinks WHERE uniqueName=?", data).fetchall()
 
 def selectAllPricesForDrink(name):
+    connection = sqlite3.connect("db.db")
     cursor = connection.cursor()
     data = (name,)
-    return cursor.execute("SELECT * FROM prices WHERE uniqueName=?", data).fetchall()
+    return cursor.execute("SELECT * FROM prices WHERE uniqueName=? ORDER BY ts DESC LIMIT 5", data).fetchall()
 
 def wipeDrinks():
+    connection = sqlite3.connect("db.db")
     cursor = connection.cursor()
     data = ()
     cursor.execute("DELETE FROM drinks WHERE 1=1", data)
@@ -57,6 +63,7 @@ def wipeDrinks():
     return
 
 def wipePrices():
+    connection = sqlite3.connect("db.db")
     cursor = connection.cursor()
     data = ()
     cursor.execute("DELETE FROM prices WHERE 1=1", data)
@@ -69,6 +76,7 @@ def wipeAll():
     return
 
 def wipeCertainPrice(name):
+    connection = sqlite3.connect("db.db")
     cursor = connection.cursor()
     data = (name)
     cursor.execute("DELETE FROM prices WHERE uniqueName=?", data)

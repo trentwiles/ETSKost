@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ETS Kost</title>
+    </head>
+    <body>
+        {% for drink in prices %}
+            <h2>{{ drink["title"] }}</h2>
+            <table>
+                <tr>
+                    <th>Price</th>
+                    <th>Milliters</th>
+                    <th>Milliters per Dollar</th>
+                    <th>Dollars per Shot</th>
+                    <th>Price Scrape Time</th>
+                </tr>
+                {% for price in drink["costs"] %}
+                <tr>
+                    <td>${{price["price"]}}</td>
+                    <td>{{price["mls"]}}mL</td>
+                    <td>{{price["mlPerDollar"]}}mL/USD</td>
+                    <td>${{price["dollarsPerShot"]}}</td>
+                    <td>{{epochToHuman(price["time"])}}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% endfor %}
+    </body>
+</html>

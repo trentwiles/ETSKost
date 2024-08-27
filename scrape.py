@@ -1,6 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 import db
+import time
+import random
 
 def scrapeBottle(url):
     headers = {"User-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:129.0) Gecko/20100101 Firefox/129.0"}
@@ -38,9 +40,9 @@ def scrapeBottle(url):
         ml_per_dollar = round(size_int/price_int, 2)
         # assumes a standard shot is 50mL
         dollars_per_shot = round(50/ml_per_dollar, 2)
-        return {"title": title, "price": price_int, "milliliters": round(size_int), "millilitersPerDollar": ml_per_dollar, "costPerShot": dollars_per_shot}
+        return {"url": url, "title": title, "price": price_int, "milliliters": round(size_int), "millilitersPerDollar": ml_per_dollar, "costPerShot": dollars_per_shot}
     else:
-        return {"title": title, "price": price_int, "milliliters": None}
+        return {"url": url, "title": title, "price": price_int, "milliliters": None}
     
 def insertAndLogPrice(url):
     data = scrapeBottle(url)
@@ -49,3 +51,20 @@ def insertAndLogPrice(url):
     
     db.insertNewDrink(data["title"], url)
     db.insertNewPrice(data["title"], data["price"], data["milliliters"], data["millilitersPerDollar"], data["costPerShot"])
+
+def getAllDrinks():
+    x = open("drinks.txt").readlines()
+    drinks = []
+    
+    for drink in x:
+        drink = drink.strip()
+        
+        # validity check
+        if "qualityliquorstore.com" not in drink or "http" not in drink:
+            print(f"Skipped {drink}, invalid url")
+            continue
+            
+        drinks.append(scrapeBottle(drink))
+    time.sleep(random.randint(5,10))
+    
+    return drinks
