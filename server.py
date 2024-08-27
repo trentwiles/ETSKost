@@ -40,7 +40,7 @@ def home():
         
     return render_template('table.html', drinks=data, prices=prices, epochToHuman=epochToHuman)
 
-@app.route('/update', methods=["POST"])
+@app.route('/update', methods=["GET"])
 def update():
     drinks = scrape.getAllDrinks()
     for drink in drinks:
