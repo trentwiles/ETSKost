@@ -4,6 +4,46 @@
         <title>ETS Kost</title>
     </head>
     <body>
+        <style>
+            @font-face {
+                font-family: 'MetroDF';
+                src: url('https://trentwil.es/a/METRO-DF.TTF') format('truetype');
+                font-weight: normal;
+                font-style: normal;
+            }
+
+            /* Apply the custom font to headings */
+            h1{
+                font-family: 'MetroDF';
+                text-align: center;
+            }
+            h2, h3, h4, h5, i {
+                font-family: 'Helvetica', sans-serif;
+                text-align: center;
+            }
+
+            /* Apply Arial font to text inside tables */
+            table {
+                font-family: Arial, sans-serif;
+                border-collapse: separate;
+                border-spacing: 10px;
+                border: 1px solid black; /* Border around the table */
+                margin: auto; /* Center the table */
+            }
+
+            /* Style table headers and cells */
+            table th, table td {
+                padding: 5px; /* Padding inside cells */
+                border: 1px solid black; /* Border around cells */
+                text-align: center; /* Center align text */
+            }
+
+            tr.first {
+                background-color: #d3f9d8; /* Light green background */
+            }
+        </style>
+        <h1>Drink Price Table</h1>
+        <hr>
         {% for drink in prices %}
             <h2>{{ drink["title"] }}</h2>
             <table>
@@ -15,15 +55,20 @@
                     <th>Price Scrape Time</th>
                 </tr>
                 {% for price in drink["costs"] %}
-                <tr>
-                    <td>${{price["price"]}}</td>
-                    <td>{{price["mls"]}}mL</td>
-                    <td>{{price["mlPerDollar"]}}mL/USD</td>
-                    <td>${{price["dollarsPerShot"]}}</td>
-                    <td>{{epochToHuman(price["time"])}}</td>
-                </tr>
+                    {% if price["isFirst"] %}
+                    <tr class="first">
+                    {% else %}
+                    <tr>
+                    {% endif %}
+                        <td>${{price["price"]}}</td>
+                        <td>{{price["mls"]}}mL</td>
+                        <td>{{price["mlPerDollar"]}}mL/USD</td>
+                        <td>${{price["dollarsPerShot"]}}</td>
+                        <td>{{epochToHuman(price["time"])}}</td>
+                    </tr>
                 {% endfor %}
             </table>
         {% endfor %}
+        <i>* Light green color indicates latest price</i>
     </body>
 </html>

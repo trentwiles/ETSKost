@@ -19,15 +19,21 @@ def home():
     for drink in data:
         dets = db.selectAllPricesForDrink(drink[0])
         formatted = []
+        counter = 0
         for priceIndex in dets:
+            isFirst = False
+            if counter == 0:
+                isFirst = True
             details = {
                 "price": priceIndex[1],
                 "mls": priceIndex[2],
                 "mlPerDollar": priceIndex[3],
                 "dollarsPerShot": priceIndex[4],
-                "time": priceIndex[5]
+                "time": priceIndex[5],
+                "isFirst": isFirst
             }
             formatted.append(details)
+            counter += 1
         prices.append({"title": drink[0], "costs": formatted})
     
     print(json.dumps(prices))
@@ -39,6 +45,11 @@ def update():
     drinks = scrape.getAllDrinks()
     for drink in drinks:
         scrape.insertAndLogPrice(drink["url"])
+    return ""
+
+@app.route('/wipe', methods=["POST"])
+def wipe():
+    db.wipeAll()
     return ""
 
 if __name__ == "__main__":
